@@ -34,6 +34,39 @@ public class StudentGradeCalculator {
             return 0f;
         }
 
+        boolean hasToIncreaseOneExtraPoint = hasToIncreaseOneExtraPoint();
+
+        float gradesSum = 0f;
+        int gradesWeightSum = 0;
+
+        for (Pair<Integer, Float> examGrade : examsGrades) {
+            gradesSum += (examGrade.first() * examGrade.second() / 100);
+            gradesWeightSum += examGrade.first();
+        }
+
+        if (gradesWeightSum > 100) {
+            return -1f;
+        }
+
+        if (gradesWeightSum < 100){
+            return -2f;
+        }
+
+
+        if (hasReachedMinimumClasses) {
+            if (hasToIncreaseOneExtraPoint) {
+                return Float.min(10f, gradesSum + 1);
+            } else {
+                return gradesSum;
+            }
+        } else {
+            return 0f;
+        }
+
+
+    }
+
+    private boolean hasToIncreaseOneExtraPoint() {
         boolean hasToIncreaseOneExtraPoint = false;
 
         for (Map.Entry<Integer, List<Pair<String, Boolean>>> yearlyTeachers : allYearsTeachers.entrySet()) {
@@ -50,29 +83,6 @@ public class StudentGradeCalculator {
                 continue;
             }
         }
-
-        float gradesSum = 0f;
-        int gradesWeightSum = 0;
-
-        for (Pair<Integer, Float> examGrade : examsGrades) {
-            gradesSum += (examGrade.first() * examGrade.second() / 100);
-            gradesWeightSum += examGrade.first();
-        }
-
-        if (gradesWeightSum == 100) {
-            if (hasReachedMinimumClasses) {
-                if (hasToIncreaseOneExtraPoint) {
-                    return Float.min(10f, gradesSum + 1);
-                } else {
-                    return gradesSum;
-                }
-            } else {
-                return 0f;
-            }
-        } else if (gradesWeightSum > 100) {
-            return -1f;
-        } else {
-            return -2f;
-        }
+        return hasToIncreaseOneExtraPoint;
     }
 }
