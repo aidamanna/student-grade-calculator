@@ -30,14 +30,12 @@ public class StudentGradeCalculator {
     }
 
     public float calculateGrades(final List<Pair<Integer, Float>> examsGrades, final boolean hasReachedMinimumClasses) {
-        if (examsGrades.isEmpty()) {
+        if (examsGrades.isEmpty() || !hasReachedMinimumClasses) {
             return 0f;
         }
 
-        boolean hasToIncreaseOneExtraPoint = hasToIncreaseOneExtraPoint();
-
-        float gradesSum = 0f;
         int gradesWeightSum = 0;
+        float gradesSum = 0f;
 
         for (Pair<Integer, Float> examGrade : examsGrades) {
             gradesSum += (examGrade.first() * examGrade.second() / 100);
@@ -52,37 +50,19 @@ public class StudentGradeCalculator {
             return -2f;
         }
 
-
-        if (hasReachedMinimumClasses) {
-            if (hasToIncreaseOneExtraPoint) {
-                return Float.min(10f, gradesSum + 1);
-            } else {
-                return gradesSum;
-            }
-        } else {
-            return 0f;
-        }
-
-
+        return Float.min(10f, gradesSum + calculateExtraPointToIncrease());
     }
 
-    private boolean hasToIncreaseOneExtraPoint() {
-        boolean hasToIncreaseOneExtraPoint = false;
+    private int calculateExtraPointToIncrease() {
+        int extraPointToIncrease = 0;
 
-        for (Map.Entry<Integer, List<Pair<String, Boolean>>> yearlyTeachers : allYearsTeachers.entrySet()) {
-            if (!(yearToCalculate != yearlyTeachers.getKey())) {
-                List<Pair<String, Boolean>> teachers = yearlyTeachers.getValue();
+        boolean hasExtraPoint = allYearsTeachers.get(yearToCalculate)
+            .stream().anyMatch(teacher -> teacher.second() == true);
 
-                for (Pair<String, Boolean> teacher : teachers) {
-                    if (teacher.second() != true) {
-                        continue;
-                    }
-                    hasToIncreaseOneExtraPoint = true;
-                }
-            } else {
-                continue;
-            }
+        if (hasExtraPoint) {
+            extraPointToIncrease = 1;
         }
-        return hasToIncreaseOneExtraPoint;
+
+        return extraPointToIncrease;
     }
 }
