@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 public class StudentGradeCalculator {
+    public static final float MAX_GRADE_SUM = 10f;
+
     final private Map<Integer, List<Pair<String, Boolean>>> allYearsTeachers = Map.ofEntries(
         new AbstractMap.SimpleImmutableEntry<>(
             2020,
@@ -34,13 +36,7 @@ public class StudentGradeCalculator {
             return 0f;
         }
 
-        int gradesWeightSum = 0;
-        float gradesSum = 0f;
-
-        for (Pair<Integer, Float> examGrade : examsGrades) {
-            gradesSum += (examGrade.first() * examGrade.second() / 100);
-            gradesWeightSum += examGrade.first();
-        }
+        int gradesWeightSum = calculateGradesWeightSum(examsGrades);
 
         if (gradesWeightSum > 100) {
             return -1f;
@@ -50,7 +46,25 @@ public class StudentGradeCalculator {
             return -2f;
         }
 
-        return Float.min(10f, gradesSum + calculateExtraPointToIncrease());
+        float gradesSum = calculateGradesSum(examsGrades);
+
+        return Float.min(MAX_GRADE_SUM, gradesSum + calculateExtraPointToIncrease());
+    }
+
+    private int calculateGradesWeightSum(List<Pair<Integer, Float>> examsGrades) {
+        int gradesWeightSum = 0;
+        for (Pair<Integer, Float> examGrade : examsGrades) {
+            gradesWeightSum += examGrade.first();
+        }
+        return gradesWeightSum;
+    }
+
+    private float calculateGradesSum(List<Pair<Integer, Float>> examsGrades) {
+        float gradesSum = 0f;
+        for (Pair<Integer, Float> examGrade : examsGrades) {
+            gradesSum += (examGrade.first() * examGrade.second() / 100);
+        }
+        return gradesSum;
     }
 
     private int calculateExtraPointToIncrease() {
