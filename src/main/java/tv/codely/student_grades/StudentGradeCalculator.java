@@ -37,7 +37,7 @@ public class StudentGradeCalculator {
             return 0f;
         }
 
-        int gradesWeightSum = calculateGradesWeightSum(examsGrades);
+        int gradesWeightSum = gradesWeightSum(examsGrades);
 
         if (gradesWeightSum > 100) {
             return -1f;
@@ -47,21 +47,21 @@ public class StudentGradeCalculator {
             return -2f;
         }
 
-        float gradesSum = calculateGradesSum(examsGrades);
+        float gradesSum = gradesSum(examsGrades);
 
         return Float.min(MAX_GRADE_SUM, gradesSum + calculateExtraPointToIncrease());
     }
 
-    private int calculateGradesWeightSum(List<Pair<Integer, Float>> examsGrades) {
+    private int gradesWeightSum(List<Pair<Integer, Float>> examsGrades) {
         return examsGrades.stream()
-            .map(examGrade -> examGrade.first())
-            .collect(Collectors.summingInt(Integer::intValue));
+            .map(Pair::first)
+            .reduce(0, Integer::sum);
     }
 
-    private float calculateGradesSum(List<Pair<Integer, Float>> examsGrades) {
+    private float gradesSum(List<Pair<Integer, Float>> examsGrades) {
         return examsGrades.stream()
             .map(examGrade -> (examGrade.first() * examGrade.second() / 100))
-            .reduce(0f, (a, b) -> a + b);
+            .reduce(0f, Float::sum);
     }
 
     private int calculateExtraPointToIncrease() {
