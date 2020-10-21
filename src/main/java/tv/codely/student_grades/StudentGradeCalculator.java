@@ -3,6 +3,7 @@ package tv.codely.student_grades;
 import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class StudentGradeCalculator {
     public static final float MAX_GRADE_SUM = 10f;
@@ -52,11 +53,9 @@ public class StudentGradeCalculator {
     }
 
     private int calculateGradesWeightSum(List<Pair<Integer, Float>> examsGrades) {
-        int gradesWeightSum = 0;
-        for (Pair<Integer, Float> examGrade : examsGrades) {
-            gradesWeightSum += examGrade.first();
-        }
-        return gradesWeightSum;
+        return examsGrades.stream()
+            .map(examGrade -> examGrade.first())
+            .collect(Collectors.summingInt(Integer::intValue));
     }
 
     private float calculateGradesSum(List<Pair<Integer, Float>> examsGrades) {
