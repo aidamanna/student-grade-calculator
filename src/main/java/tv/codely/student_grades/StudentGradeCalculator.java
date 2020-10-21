@@ -59,11 +59,9 @@ public class StudentGradeCalculator {
     }
 
     private float calculateGradesSum(List<Pair<Integer, Float>> examsGrades) {
-        float gradesSum = 0f;
-        for (Pair<Integer, Float> examGrade : examsGrades) {
-            gradesSum += (examGrade.first() * examGrade.second() / 100);
-        }
-        return gradesSum;
+        return examsGrades.stream()
+            .map(examGrade -> (examGrade.first() * examGrade.second() / 100))
+            .reduce(0f, (a, b) -> a + b);
     }
 
     private int calculateExtraPointToIncrease() {
