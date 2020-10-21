@@ -68,7 +68,7 @@ public class StudentGradeCalculator {
         int extraPointToIncrease = 0;
 
         boolean hasExtraPoint = allYearsTeachers.get(yearToCalculate)
-            .stream().anyMatch(teacher -> teacher.second() == true);
+            .stream().anyMatch(Pair::second);
 
         if (hasExtraPoint) {
             extraPointToIncrease = 1;
