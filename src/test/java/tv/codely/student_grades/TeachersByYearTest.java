@@ -7,16 +7,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class TeachersByYearTest {
 
     @Test
-    void shouldReturn0IfNonOfTheTeachersForThatYearIsBenevolent() {
+    void shouldReturnFalseIfNonOfTheTeachersForThatYearIsBenevolent() {
         TeachersByYear teachersByYear = new TeachersByYear();
 
-        assertEquals(0, teachersByYear.increaseInGrade(2019));
+        assertFalse(teachersByYear.isAnyBenevolent(2019));
     }
 
     @Test
     void shouldReturn1IfAnyOfTheTeachersForThatYearIsBenevolent() {
         TeachersByYear teachersByYear = new TeachersByYear();
 
-        assertEquals(1, teachersByYear.increaseInGrade(2020));
+        assertTrue(teachersByYear.isAnyBenevolent(2020));
     }
 }

@@ -29,7 +29,7 @@ public class TeachersByYear {
         );
     }
 
-    public int increaseInGrade(int year) {
-        return entries.get(year).stream().anyMatch(Pair::second) ? 1 : 0;
+    public boolean isAnyBenevolent(int year) {
+        return entries.get(year).stream().anyMatch(Pair::second);
     }
 }
