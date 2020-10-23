@@ -4,12 +4,12 @@ import java.util.List;
 
 public class StudentGradeCalculator {
     public static final float MAX_GRADE_SUM = 10f;
-    private final TeachersByYear teachersByYear;
+    private final TeachersRepository teachersRepository;
     private final Student student;
     private final int yearToCalculate;
 
-    public StudentGradeCalculator(final int yearToCalculate, TeachersByYear teachersByYear, Student student) {
-        this.teachersByYear = teachersByYear;
+    public StudentGradeCalculator(final int yearToCalculate, TeachersRepository teachersRepository, Student student) {
+        this.teachersRepository = teachersRepository;
         this.student = student;
         this.yearToCalculate = yearToCalculate;
     }
@@ -45,7 +45,7 @@ public class StudentGradeCalculator {
     }
 
     private float gradeSumWithExtraPointIfApplies() {
-        int extraPointToAdd = teachersByYear.isAnyBenevolent(yearToCalculate) ? 1 : 0;
+        int extraPointToAdd = teachersRepository.isAnyBenevolent(yearToCalculate) ? 1 : 0;
         float gradesSum = gradesSum(student.examGrades());
 
         return Float.min(MAX_GRADE_SUM, gradesSum + extraPointToAdd);

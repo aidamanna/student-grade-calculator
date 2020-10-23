@@ -4,11 +4,11 @@ import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 
-public class TeachersByYear {
+public class TeachersRepository {
 
     private final Map<Integer, List<Pair<String, Boolean>>> entries;
 
-    public TeachersByYear() {
+    public TeachersRepository() {
         entries = Map.ofEntries(
             new AbstractMap.SimpleImmutableEntry<>(
                 2020,

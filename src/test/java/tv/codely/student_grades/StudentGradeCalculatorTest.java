@@ -10,20 +10,20 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class StudentGradeCalculatorTest {
-    private TeachersByYear teachersByYear;
+    private TeachersRepository teachersRepository;
     private Student student;
     private StudentGradeCalculator studentGradeCalculator;
 
     @BeforeEach
     void setUp() {
-        teachersByYear = mock(TeachersByYear.class);
+        teachersRepository = mock(TeachersRepository.class);
         student = mock(Student.class);
     }
 
     @Test
     void shouldReturn0IfStudentHasNotDoneAnyExam() {
         studentGradeCalculator =
-            new StudentGradeCalculator(2019, teachersByYear, student);
+            new StudentGradeCalculator(2019, teachersRepository, student);
 
         when(student.hasNotDoneAnyExam()).thenReturn(true);
         when(student.hasNotReachedMinimumClasses()).thenReturn(false);
@@ -34,7 +34,7 @@ public class StudentGradeCalculatorTest {
     @Test
     void shouldReturn0IfStudentHasNotAttendedMinimumClasses() {
         studentGradeCalculator =
-            new StudentGradeCalculator(2019, teachersByYear, student);
+            new StudentGradeCalculator(2019, teachersRepository, student);
 
         when(student.hasNotDoneAnyExam()).thenReturn(false);
         when(student.hasNotReachedMinimumClasses()).thenReturn(true);
@@ -45,7 +45,7 @@ public class StudentGradeCalculatorTest {
     @Test
     void shouldCalculateSameGradeIfStudentDidOneSingleExam() {
         StudentGradeCalculator studentGradeCalculator =
-            new StudentGradeCalculator(2019, teachersByYear, student);
+            new StudentGradeCalculator(2019, teachersRepository, student);
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
@@ -58,7 +58,7 @@ public class StudentGradeCalculatorTest {
     @Test
     void shouldCalculateAverageGradeIfStudentDidDifferentExams() {
         StudentGradeCalculator studentGradeCalculator =
-            new StudentGradeCalculator(2019, teachersByYear, student);
+            new StudentGradeCalculator(2019, teachersRepository, student);
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
@@ -82,7 +82,7 @@ public class StudentGradeCalculatorTest {
     @Test
     void shouldRoundUpToTwoDecimalsIfOddExamGrades() {
         StudentGradeCalculator studentGradeCalculator =
-            new StudentGradeCalculator(2019, teachersByYear, student);
+            new StudentGradeCalculator(2019, teachersRepository, student);
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
@@ -98,7 +98,7 @@ public class StudentGradeCalculatorTest {
     @Test
     void shouldReturnMinus2IfAllExamGradesWeightIsBelow100() {
         StudentGradeCalculator studentGradeCalculator =
-            new StudentGradeCalculator(2019, teachersByYear, student);
+            new StudentGradeCalculator(2019, teachersRepository, student);
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
@@ -114,7 +114,7 @@ public class StudentGradeCalculatorTest {
     @Test
     void shouldReturnMinus1IfAllExamGradesWeightIsOver100() {
         StudentGradeCalculator studentGradeCalculator =
-            new StudentGradeCalculator(2019, teachersByYear, student);
+            new StudentGradeCalculator(2019, teachersRepository, student);
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
@@ -130,14 +130,14 @@ public class StudentGradeCalculatorTest {
     @Test
     void shouldIncreaseOneExtraPointIfThereIsAnyBenevolentTeacherInTheYearToCalculateGrades() {
         StudentGradeCalculator studentGradeCalculator =
-            new StudentGradeCalculator(2020, teachersByYear, student);
+            new StudentGradeCalculator(2020, teachersRepository, student);
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
         final List<Pair<Integer, Float>> examsGrades = List.of(new Pair<>(100, 5f));
         when(student.examGrades()).thenReturn(examsGrades);
 
-        when(teachersByYear.isAnyBenevolent(2020)).thenReturn(true);
+        when(teachersRepository.isAnyBenevolent(2020)).thenReturn(true);
 
         assertEquals(6, studentGradeCalculator.execute());
     }
@@ -145,13 +145,13 @@ public class StudentGradeCalculatorTest {
     @Test
     void shouldReturnMaximumGradeIfAddingExtraPointMakesGradeHigherThanMaximum() {
         StudentGradeCalculator studentGradeCalculator =
-            new StudentGradeCalculator(2020, teachersByYear, student);
+            new StudentGradeCalculator(2020, teachersRepository, student);
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
         final List<Pair<Integer, Float>> examsGrades = List.of(new Pair<>(100, 9.8f));
 
         when(student.examGrades()).thenReturn(examsGrades);
-        when(teachersByYear.isAnyBenevolent(2020)).thenReturn(true);
+        when(teachersRepository.isAnyBenevolent(2020)).thenReturn(true);
 
         assertEquals(10, studentGradeCalculator.execute());
     }
