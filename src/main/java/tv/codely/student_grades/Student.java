@@ -6,20 +6,20 @@ import java.util.List;
 public class Student {
     public static final int MINIMUM_CLASSES_TO_ATTEND = 1;
 
-    private List<Pair<Integer, Float>> examGrades;
-    private int classesAttended;
+    private final List<ExamGradeWeighted> examGrades;
+    private final ClassesAttended classesAttended;
 
     public Student() {
         examGrades = new ArrayList<>();
-        classesAttended = 0;
+        classesAttended = new ClassesAttended();
     }
 
-    public void addExamGrade(Pair<Integer, Float> examGrade) {
+    public void addExamGrade(ExamGradeWeighted examGrade) {
         examGrades.add(examGrade);
     }
 
     public void attendedClass() {
-        classesAttended++;
+        classesAttended.add();
     }
 
     public boolean hasNotDoneAnyExam() {
@@ -27,10 +27,10 @@ public class Student {
     }
 
     public boolean hasNotReachedMinimumClasses() {
-        return classesAttended < MINIMUM_CLASSES_TO_ATTEND;
+        return classesAttended.get() < MINIMUM_CLASSES_TO_ATTEND;
     }
 
-    public List<Pair<Integer, Float>> examGrades() {
-        return null;
+    public List<ExamGradeWeighted> getExamGradesWeighted() {
+        return examGrades;
     }
 }

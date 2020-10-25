@@ -19,7 +19,7 @@ public class StudentGradeCalculator {
             return 0f;
         }
 
-        int gradesWeightSum = gradesWeightSum(student.examGrades());
+        int gradesWeightSum = gradesWeightSum(student.getExamGradesWeighted());
 
         if (gradesWeightSum > 100) {
             return -1f;
@@ -32,22 +32,22 @@ public class StudentGradeCalculator {
         return gradeSumWithExtraPointIfApplies();
     }
 
-    private int gradesWeightSum(List<Pair<Integer, Float>> examsGrades) {
-        return examsGrades.stream()
-            .map(Pair::first)
+    private int gradesWeightSum(List<ExamGradeWeighted> examGradesWeighted) {
+        return examGradesWeighted.stream()
+            .map(examGradeWeighted -> examGradeWeighted.getWeight())
             .reduce(0, Integer::sum);
-    }
-
-    private float gradesSum(List<Pair<Integer, Float>> examsGrades) {
-        return examsGrades.stream()
-            .map(examGrade -> (examGrade.first() * examGrade.second() / 100))
-            .reduce(0f, Float::sum);
     }
 
     private float gradeSumWithExtraPointIfApplies() {
         int extraPointToAdd = teachersRepository.isAnyBenevolent(yearToCalculate) ? 1 : 0;
-        float gradesSum = gradesSum(student.examGrades());
+        float gradesSum = gradesSum(student.getExamGradesWeighted());
 
         return Float.min(MAX_GRADE_SUM, gradesSum + extraPointToAdd);
+    }
+
+    private float gradesSum(List<ExamGradeWeighted> examGradesWeighted) {
+        return examGradesWeighted.stream()
+            .map(examGradeWeighted -> (examGradeWeighted.getWeight() * examGradeWeighted.getGrade() / 100))
+            .reduce(0f, Float::sum);
     }
 }

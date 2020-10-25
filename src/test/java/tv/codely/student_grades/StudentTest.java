@@ -22,8 +22,9 @@ class StudentTest {
 
     @Test
     void shouldReturnFalseIfItHasDoneAnyExam() {
-        final Pair<Integer, Float> examGrade = new Pair<>(100, 5f);
-        student.addExamGrade(examGrade);
+        final ExamGradeWeighted examGradeWeighted =
+            new ExamGradeWeighted(new ExamWeight(100), new ExamGrade(5f));
+        student.addExamGrade(examGradeWeighted);
 
         assertFalse(student.hasNotDoneAnyExam());
     }
