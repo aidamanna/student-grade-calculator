@@ -22,9 +22,9 @@ class StudentTest {
 
     @Test
     void shouldReturnFalseIfItHasDoneAnyExam() {
-        final ExamGradeWeighted examGradeWeighted =
-            new ExamGradeWeighted(new ExamWeight(100), new ExamGrade(5f));
-        student.addExamGrade(examGradeWeighted);
+        final ExamGrade examGrade =
+            new ExamGrade(new Weight(100), new Grade(5f));
+        student.addExamGrade(examGrade);
 
         assertFalse(student.hasNotDoneAnyExam());
     }

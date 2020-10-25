@@ -2,13 +2,19 @@ package tv.codely.student_grades;
 
 public class ExamGrade {
 
-    private final float value;
+    private final Weight weight;
+    private final Grade grade;
 
-    public ExamGrade(float value) {
-        this.value = value;
+    public ExamGrade(Weight weight, Grade grade) {
+        this.weight = weight;
+        this.grade = grade;
     }
 
-    public float getValue() {
-        return value;
+    public int getWeight() {
+        return weight.getValue();
+    }
+
+    public float getGrade() {
+        return grade.getValue();
     }
 }

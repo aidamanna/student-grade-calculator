@@ -6,7 +6,7 @@ import java.util.List;
 public class Student {
     public static final int MINIMUM_CLASSES_TO_ATTEND = 1;
 
-    private final List<ExamGradeWeighted> examGrades;
+    private final List<ExamGrade> examGrades;
     private final ClassesAttended classesAttended;
 
     public Student() {
@@ -14,7 +14,7 @@ public class Student {
         classesAttended = new ClassesAttended();
     }
 
-    public void addExamGrade(ExamGradeWeighted examGrade) {
+    public void addExamGrade(ExamGrade examGrade) {
         examGrades.add(examGrade);
     }
 
@@ -30,7 +30,7 @@ public class Student {
         return classesAttended.get() < MINIMUM_CLASSES_TO_ATTEND;
     }
 
-    public List<ExamGradeWeighted> getExamGradesWeighted() {
+    public List<ExamGrade> getExamGradesWeighted() {
         return examGrades;
     }
 }

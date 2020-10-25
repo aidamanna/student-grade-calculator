@@ -49,8 +49,8 @@ public class StudentGradeCalculatorTest {
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
-        final List<ExamGradeWeighted> examGradesWeighted = getExamsGradesForOneExam();
-        when(student.getExamGradesWeighted()).thenReturn(examGradesWeighted);
+        final List<ExamGrade> examGrades = getExamsGradesForOneExam();
+        when(student.getExamGradesWeighted()).thenReturn(examGrades);
 
         assertEquals(5, studentGradeCalculator.execute());
     }
@@ -62,8 +62,8 @@ public class StudentGradeCalculatorTest {
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
-        final List<ExamGradeWeighted> examGradesWeighted = getExamGradesWeightedForMultipleExams();
-        when(student.getExamGradesWeighted()).thenReturn(examGradesWeighted);
+        final List<ExamGrade> examGrades = getExamGradesForMultipleExams();
+        when(student.getExamGradesWeighted()).thenReturn(examGrades);
 
         assertEquals(5, studentGradeCalculator.execute());
     }
@@ -75,8 +75,8 @@ public class StudentGradeCalculatorTest {
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
-        final List<ExamGradeWeighted> examGradesWeighted = getExamGradesWeightedForOddExamGrades();
-        when(student.getExamGradesWeighted()).thenReturn(examGradesWeighted);
+        final List<ExamGrade> examGrades = getExamGradesForOddExamGrades();
+        when(student.getExamGradesWeighted()).thenReturn(examGrades);
 
         assertEquals(4.5f, studentGradeCalculator.execute());
     }
@@ -88,8 +88,8 @@ public class StudentGradeCalculatorTest {
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
-        final List<ExamGradeWeighted> examGradesWeighted = getExamGradeWithWeightBelow100();
-        when(student.getExamGradesWeighted()).thenReturn(examGradesWeighted);
+        final List<ExamGrade> examGrades = getExamGradesWithWeightBelow100();
+        when(student.getExamGradesWeighted()).thenReturn(examGrades);
 
         assertEquals(-2, studentGradeCalculator.execute());
     }
@@ -101,8 +101,8 @@ public class StudentGradeCalculatorTest {
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
-        final List<ExamGradeWeighted> examGradesWeighted = getExamGradeWithWeightOver100();
-        when(student.getExamGradesWeighted()).thenReturn(examGradesWeighted);
+        final List<ExamGrade> examGrades = getExamGradesWithWeightOver100();
+        when(student.getExamGradesWeighted()).thenReturn(examGrades);
 
         assertEquals(-1, studentGradeCalculator.execute());
     }
@@ -114,8 +114,8 @@ public class StudentGradeCalculatorTest {
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
-        final List<ExamGradeWeighted> examGradesWeighted = List.of(getExamGrade(100, 5f));
-        when(student.getExamGradesWeighted()).thenReturn(examGradesWeighted);
+        final List<ExamGrade> examGrades = List.of(getExamGrade(100, 5f));
+        when(student.getExamGradesWeighted()).thenReturn(examGrades);
 
         when(teachersRepository.isAnyBenevolent(2020)).thenReturn(true);
 
@@ -128,9 +128,9 @@ public class StudentGradeCalculatorTest {
             new StudentGradeCalculator(2020, teachersRepository, student);
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
-        final List<ExamGradeWeighted> examGradesWeighted = List.of(getExamGrade(100, 9.8f));
+        final List<ExamGrade> examGrades = List.of(getExamGrade(100, 9.8f));
 
-        when(student.getExamGradesWeighted()).thenReturn(examGradesWeighted);
+        when(student.getExamGradesWeighted()).thenReturn(examGrades);
         when(teachersRepository.isAnyBenevolent(2020)).thenReturn(true);
 
         assertEquals(10, studentGradeCalculator.execute());
@@ -141,13 +141,13 @@ public class StudentGradeCalculatorTest {
         when(student.hasNotReachedMinimumClasses()).thenReturn(false);
     }
 
-    private List<ExamGradeWeighted> getExamsGradesForOneExam() {
+    private List<ExamGrade> getExamsGradesForOneExam() {
         return List.of(
             getExamGrade(100, 5f)
         );
     }
 
-    private List<ExamGradeWeighted> getExamGradesWeightedForMultipleExams() {
+    private List<ExamGrade> getExamGradesForMultipleExams() {
         return List.of(
             getExamGrade(10, 4f),
             getExamGrade(10, 6f),
@@ -162,28 +162,28 @@ public class StudentGradeCalculatorTest {
         );
     }
 
-    private List<ExamGradeWeighted> getExamGradesWeightedForOddExamGrades() {
+    private List<ExamGrade> getExamGradesForOddExamGrades() {
         return List.of(
             getExamGrade(50, 4f),
             getExamGrade(50, 5f)
         );
     }
 
-    private List<ExamGradeWeighted> getExamGradeWithWeightBelow100() {
+    private List<ExamGrade> getExamGradesWithWeightBelow100() {
         return List.of(
             getExamGrade(10, 4f),
             getExamGrade(10, 6f)
         );
     }
 
-    private List<ExamGradeWeighted> getExamGradeWithWeightOver100() {
+    private List<ExamGrade> getExamGradesWithWeightOver100() {
         return List.of(
             getExamGrade(90, 4f),
             getExamGrade(20, 6f)
         );
     }
 
-    private ExamGradeWeighted getExamGrade(int weight, float grade) {
-        return new ExamGradeWeighted(new ExamWeight(weight), new ExamGrade(grade));
+    private ExamGrade getExamGrade(int weight, float grade) {
+        return new ExamGrade(new Weight(weight), new Grade(grade));
     }
 }

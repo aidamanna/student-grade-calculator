@@ -32,9 +32,9 @@ public class StudentGradeCalculator {
         return gradeSumWithExtraPointIfApplies();
     }
 
-    private int gradesWeightSum(List<ExamGradeWeighted> examGradesWeighted) {
+    private int gradesWeightSum(List<ExamGrade> examGradesWeighted) {
         return examGradesWeighted.stream()
-            .map(examGradeWeighted -> examGradeWeighted.getWeight())
+            .map(examGrade -> examGrade.getWeight())
             .reduce(0, Integer::sum);
     }
 
@@ -45,9 +45,9 @@ public class StudentGradeCalculator {
         return Float.min(MAX_GRADE_SUM, gradesSum + extraPointToAdd);
     }
 
-    private float gradesSum(List<ExamGradeWeighted> examGradesWeighted) {
-        return examGradesWeighted.stream()
-            .map(examGradeWeighted -> (examGradeWeighted.getWeight() * examGradeWeighted.getGrade() / 100))
+    private float gradesSum(List<ExamGrade> examGrades) {
+        return examGrades.stream()
+            .map(examGrade -> (examGrade.getWeight() * examGrade.getGrade() / 100))
             .reduce(0f, Float::sum);
     }
 }

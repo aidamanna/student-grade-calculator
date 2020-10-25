@@ -1,10 +1,10 @@
 package tv.codely.student_grades;
 
-public class ExamWeight {
+public class Weight {
 
     private final int value;
 
-    public ExamWeight(int value) {
+    public Weight(int value) {
         this.value = value;
     }
 
