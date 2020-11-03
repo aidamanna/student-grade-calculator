@@ -2,7 +2,6 @@ package tv.codely.student_grades.application;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tv.codely.student_grades.application.StudentGradeCalculator;
 import tv.codely.student_grades.domain.*;
 import tv.codely.student_grades.infrastructure.TeachersRepository;
 
@@ -25,7 +24,7 @@ public class StudentGradeCalculatorTest {
     }
 
     @Test
-    void shouldReturn0IfStudentHasNotDoneAnyExam() throws IncorrectExamGradesWeightSum {
+    void shouldReturn0IfStudentHasNotDoneAnyExam() throws ExamsWeightSumIncorrect {
         studentGradeCalculator =
             new StudentGradeCalculator(2019, teachersRepository, student);
 
@@ -36,7 +35,7 @@ public class StudentGradeCalculatorTest {
     }
 
     @Test
-    void shouldReturn0IfStudentHasNotAttendedMinimumClasses() throws IncorrectExamGradesWeightSum {
+    void shouldReturn0IfStudentHasNotAttendedMinimumClasses() throws ExamsWeightSumIncorrect {
         studentGradeCalculator =
             new StudentGradeCalculator(2019, teachersRepository, student);
 
@@ -47,40 +46,40 @@ public class StudentGradeCalculatorTest {
     }
 
     @Test
-    void shouldCalculateSameGradeIfStudentDidOneSingleExam() throws IncorrectExamGradesWeightSum {
+    void shouldCalculateSameGradeIfStudentDidOneSingleExam() throws ExamsWeightSumIncorrect {
         StudentGradeCalculator studentGradeCalculator =
             new StudentGradeCalculator(2019, teachersRepository, student);
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
-        final List<ExamGrade> examGrades = getExamsGradesForOneExam();
-        when(student.getExamGradesWeighted()).thenReturn(examGrades);
+        final List<Exam> exams = getExamsGradesForOneExam();
+        when(student.getExams()).thenReturn(exams);
 
         assertEquals(5, studentGradeCalculator.execute());
     }
 
     @Test
-    void shouldCalculateAverageGradeIfStudentDidDifferentExams() throws IncorrectExamGradesWeightSum {
+    void shouldCalculateAverageGradeIfStudentDidDifferentExams() throws ExamsWeightSumIncorrect {
         StudentGradeCalculator studentGradeCalculator =
             new StudentGradeCalculator(2019, teachersRepository, student);
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
-        final List<ExamGrade> examGrades = getExamGradesForMultipleExams();
-        when(student.getExamGradesWeighted()).thenReturn(examGrades);
+        final List<Exam> exams = getExamGradesForMultipleExams();
+        when(student.getExams()).thenReturn(exams);
 
         assertEquals(5, studentGradeCalculator.execute());
     }
 
     @Test
-    void shouldRoundUpToTwoDecimalsIfOddExamGrades() throws IncorrectExamGradesWeightSum {
+    void shouldRoundUpToTwoDecimalsIfOddExamGrades() throws ExamsWeightSumIncorrect {
         StudentGradeCalculator studentGradeCalculator =
             new StudentGradeCalculator(2019, teachersRepository, student);
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
-        final List<ExamGrade> examGrades = getExamGradesForOddExamGrades();
-        when(student.getExamGradesWeighted()).thenReturn(examGrades);
+        final List<Exam> exams = getExamGradesForOddExamGrades();
+        when(student.getExams()).thenReturn(exams);
 
         assertEquals(4.5f, studentGradeCalculator.execute());
     }
@@ -92,38 +91,38 @@ public class StudentGradeCalculatorTest {
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
-        final List<ExamGrade> examGrades = getExamGradesWithWeightBelow100();
-        when(student.getExamGradesWeighted()).thenReturn(examGrades);
+        final List<Exam> exams = getExamGradesWithWeightBelow100();
+        when(student.getExams()).thenReturn(exams);
 
-        assertThrows(IncorrectExamGradesWeightSum.class, () -> {
+        assertThrows(ExamsWeightSumIncorrect.class, () -> {
             studentGradeCalculator.execute();
         });
     }
 
     @Test
-    void shouldThrowAnExceptionIfAllExamGradesWeightIsOver100() throws IncorrectExamGradesWeightSum {
+    void shouldThrowAnExceptionIfAllExamGradesWeightIsOver100() throws ExamsWeightSumIncorrect {
         StudentGradeCalculator studentGradeCalculator =
             new StudentGradeCalculator(2019, teachersRepository, student);
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
-        final List<ExamGrade> examGrades = getExamGradesWithWeightOver100();
-        when(student.getExamGradesWeighted()).thenReturn(examGrades);
+        final List<Exam> exams = getExamGradesWithWeightOver100();
+        when(student.getExams()).thenReturn(exams);
 
-        assertThrows(IncorrectExamGradesWeightSum.class, () -> {
+        assertThrows(ExamsWeightSumIncorrect.class, () -> {
             studentGradeCalculator.execute();
         });
     }
 
     @Test
-    void shouldIncreaseOneExtraPointIfThereIsAnyBenevolentTeacherInTheYearToCalculateGrades() throws IncorrectExamGradesWeightSum {
+    void shouldIncreaseOneExtraPointIfThereIsAnyBenevolentTeacherInTheYearToCalculateGrades() throws ExamsWeightSumIncorrect {
         StudentGradeCalculator studentGradeCalculator =
             new StudentGradeCalculator(2020, teachersRepository, student);
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
 
-        final List<ExamGrade> examGrades = List.of(getExamGrade(100, 5f));
-        when(student.getExamGradesWeighted()).thenReturn(examGrades);
+        final List<Exam> exams = List.of(getExamGrade(100, 5f));
+        when(student.getExams()).thenReturn(exams);
 
         when(teachersRepository.isAnyBenevolent(2020)).thenReturn(true);
 
@@ -131,14 +130,14 @@ public class StudentGradeCalculatorTest {
     }
 
     @Test
-    void shouldReturnMaximumGradeIfAddingExtraPointMakesGradeHigherThanMaximum() throws IncorrectExamGradesWeightSum {
+    void shouldReturnMaximumGradeIfAddingExtraPointMakesGradeHigherThanMaximum() throws ExamsWeightSumIncorrect {
         StudentGradeCalculator studentGradeCalculator =
             new StudentGradeCalculator(2020, teachersRepository, student);
 
         studentMockForMinimumClassesReachedAndAnyExamsDone();
-        final List<ExamGrade> examGrades = List.of(getExamGrade(100, 9.8f));
+        final List<Exam> exams = List.of(getExamGrade(100, 9.8f));
 
-        when(student.getExamGradesWeighted()).thenReturn(examGrades);
+        when(student.getExams()).thenReturn(exams);
         when(teachersRepository.isAnyBenevolent(2020)).thenReturn(true);
 
         assertEquals(10, studentGradeCalculator.execute());
@@ -149,13 +148,13 @@ public class StudentGradeCalculatorTest {
         when(student.hasNotReachedMinimumClasses()).thenReturn(false);
     }
 
-    private List<ExamGrade> getExamsGradesForOneExam() {
+    private List<Exam> getExamsGradesForOneExam() {
         return List.of(
             getExamGrade(100, 5f)
         );
     }
 
-    private List<ExamGrade> getExamGradesForMultipleExams() {
+    private List<Exam> getExamGradesForMultipleExams() {
         return List.of(
             getExamGrade(10, 4f),
             getExamGrade(10, 6f),
@@ -170,28 +169,28 @@ public class StudentGradeCalculatorTest {
         );
     }
 
-    private List<ExamGrade> getExamGradesForOddExamGrades() {
+    private List<Exam> getExamGradesForOddExamGrades() {
         return List.of(
             getExamGrade(50, 4f),
             getExamGrade(50, 5f)
         );
     }
 
-    private List<ExamGrade> getExamGradesWithWeightBelow100() {
+    private List<Exam> getExamGradesWithWeightBelow100() {
         return List.of(
             getExamGrade(10, 4f),
             getExamGrade(10, 6f)
         );
     }
 
-    private List<ExamGrade> getExamGradesWithWeightOver100() {
+    private List<Exam> getExamGradesWithWeightOver100() {
         return List.of(
             getExamGrade(90, 4f),
             getExamGrade(20, 6f)
         );
     }
 
-    private ExamGrade getExamGrade(int weight, float grade) {
-        return new ExamGrade(new Weight(weight), new Grade(grade));
+    private Exam getExamGrade(int weight, float grade) {
+        return new Exam(new Weight(weight), new Grade(grade));
     }
 }

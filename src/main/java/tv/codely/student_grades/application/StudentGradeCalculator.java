@@ -1,7 +1,7 @@
 package tv.codely.student_grades.application;
 
-import tv.codely.student_grades.domain.ExamGrade;
-import tv.codely.student_grades.domain.IncorrectExamGradesWeightSum;
+import tv.codely.student_grades.domain.Exam;
+import tv.codely.student_grades.domain.ExamsWeightSumIncorrect;
 import tv.codely.student_grades.domain.Student;
 import tv.codely.student_grades.infrastructure.TeachersRepository;
 
@@ -19,40 +19,40 @@ public class StudentGradeCalculator {
         this.yearToCalculate = yearToCalculate;
     }
 
-    public float execute() throws IncorrectExamGradesWeightSum {
+    public float execute() throws ExamsWeightSumIncorrect {
         if (student.hasNotDoneAnyExam() || student.hasNotReachedMinimumClasses()) {
             return 0f;
         }
 
-        int gradesWeightSum = gradesWeightSum(student.getExamGradesWeighted());
+        int examsWeightSum = examsWeightSum(student.getExams());
 
-        if (gradesWeightSum > 100) {
-            throw new IncorrectExamGradesWeightSum("Exam grades weight sum is above 100");
+        if (examsWeightSum > 100) {
+            throw new ExamsWeightSumIncorrect("Exam grades weight sum is above 100");
         }
 
-        if (gradesWeightSum < 100){
-            throw new IncorrectExamGradesWeightSum("Exam grades weight sum is below 100");
+        if (examsWeightSum < 100){
+            throw new ExamsWeightSumIncorrect("Exam grades weight sum is below 100");
         }
 
-        return gradeSumWithExtraPointIfApplies();
+        return examGradesSumWithExtraPointIfApplies();
     }
 
-    private int gradesWeightSum(List<ExamGrade> examGradesWeighted) {
-        return examGradesWeighted.stream()
-            .map(examGrade -> examGrade.getWeight())
+    private int examsWeightSum(List<Exam> exams) {
+        return exams.stream()
+            .map(exam -> exam.getWeight())
             .reduce(0, Integer::sum);
     }
 
-    private float gradeSumWithExtraPointIfApplies() {
+    private float examGradesSumWithExtraPointIfApplies() {
         int extraPointToAdd = teachersRepository.isAnyBenevolent(yearToCalculate) ? 1 : 0;
-        float gradesSum = gradesSum(student.getExamGradesWeighted());
+        float gradesSum = examGradesSum(student.getExams());
 
         return Float.min(MAX_GRADE_SUM, gradesSum + extraPointToAdd);
     }
 
-    private float gradesSum(List<ExamGrade> examGrades) {
-        return examGrades.stream()
-            .map(examGrade -> (examGrade.getWeight() * examGrade.getGrade() / 100))
+    private float examGradesSum(List<Exam> exams) {
+        return exams.stream()
+            .map(exam -> (exam.getWeight() * exam.getGrade() / 100))
             .reduce(0f, Float::sum);
     }
 }

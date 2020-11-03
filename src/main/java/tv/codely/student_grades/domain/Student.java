@@ -6,16 +6,16 @@ import java.util.List;
 public class Student {
     public static final int MINIMUM_CLASSES_TO_ATTEND = 1;
 
-    private final List<ExamGrade> examGrades;
+    private final List<Exam> exams;
     private final ClassesAttended classesAttended;
 
     public Student() {
-        examGrades = new ArrayList<>();
+        exams = new ArrayList<>();
         classesAttended = new ClassesAttended();
     }
 
-    public void addExamGrade(ExamGrade examGrade) {
-        examGrades.add(examGrade);
+    public void addExam(Exam exam) {
+        exams.add(exam);
     }
 
     public void attendedClass() {
@@ -23,14 +23,14 @@ public class Student {
     }
 
     public boolean hasNotDoneAnyExam() {
-        return examGrades.isEmpty();
+        return exams.isEmpty();
     }
 
     public boolean hasNotReachedMinimumClasses() {
         return classesAttended.get() < MINIMUM_CLASSES_TO_ATTEND;
     }
 
-    public List<ExamGrade> getExamGradesWeighted() {
-        return examGrades;
+    public List<Exam> getExams() {
+        return exams;
     }
 }

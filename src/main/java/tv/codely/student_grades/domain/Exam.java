@@ -1,11 +1,11 @@
 package tv.codely.student_grades.domain;
 
-public class ExamGrade {
+public class Exam {
 
     private final Weight weight;
     private final Grade grade;
 
-    public ExamGrade(Weight weight, Grade grade) {
+    public Exam(Weight weight, Grade grade) {
         this.weight = weight;
         this.grade = grade;
     }
