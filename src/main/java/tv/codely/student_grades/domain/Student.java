@@ -1,4 +1,4 @@
-package tv.codely.student_grades;
+package tv.codely.student_grades.domain;
 
 import java.util.ArrayList;
 import java.util.List;

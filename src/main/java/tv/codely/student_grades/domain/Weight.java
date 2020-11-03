@@ -1,4 +1,4 @@
-package tv.codely.student_grades;
+package tv.codely.student_grades.domain;
 
 public class Weight {
 

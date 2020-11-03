@@ -1,4 +1,4 @@
-package tv.codely.student_grades;
+package tv.codely.student_grades.infrastructure;
 
 import java.util.AbstractMap;
 import java.util.List;

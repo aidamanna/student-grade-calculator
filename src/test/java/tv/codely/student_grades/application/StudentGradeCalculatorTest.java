@@ -1,11 +1,15 @@
-package tv.codely.student_grades;
+package tv.codely.student_grades.application;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tv.codely.student_grades.application.StudentGradeCalculator;
+import tv.codely.student_grades.domain.*;
+import tv.codely.student_grades.infrastructure.TeachersRepository;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -21,7 +25,7 @@ public class StudentGradeCalculatorTest {
     }
 
     @Test
-    void shouldReturn0IfStudentHasNotDoneAnyExam() {
+    void shouldReturn0IfStudentHasNotDoneAnyExam() throws IncorrectExamGradesWeightSum {
         studentGradeCalculator =
             new StudentGradeCalculator(2019, teachersRepository, student);
 
@@ -32,7 +36,7 @@ public class StudentGradeCalculatorTest {
     }
 
     @Test
-    void shouldReturn0IfStudentHasNotAttendedMinimumClasses() {
+    void shouldReturn0IfStudentHasNotAttendedMinimumClasses() throws IncorrectExamGradesWeightSum {
         studentGradeCalculator =
             new StudentGradeCalculator(2019, teachersRepository, student);
 
@@ -43,7 +47,7 @@ public class StudentGradeCalculatorTest {
     }
 
     @Test
-    void shouldCalculateSameGradeIfStudentDidOneSingleExam() {
+    void shouldCalculateSameGradeIfStudentDidOneSingleExam() throws IncorrectExamGradesWeightSum {
         StudentGradeCalculator studentGradeCalculator =
             new StudentGradeCalculator(2019, teachersRepository, student);
 
@@ -56,7 +60,7 @@ public class StudentGradeCalculatorTest {
     }
 
     @Test
-    void shouldCalculateAverageGradeIfStudentDidDifferentExams() {
+    void shouldCalculateAverageGradeIfStudentDidDifferentExams() throws IncorrectExamGradesWeightSum {
         StudentGradeCalculator studentGradeCalculator =
             new StudentGradeCalculator(2019, teachersRepository, student);
 
@@ -69,7 +73,7 @@ public class StudentGradeCalculatorTest {
     }
 
     @Test
-    void shouldRoundUpToTwoDecimalsIfOddExamGrades() {
+    void shouldRoundUpToTwoDecimalsIfOddExamGrades() throws IncorrectExamGradesWeightSum {
         StudentGradeCalculator studentGradeCalculator =
             new StudentGradeCalculator(2019, teachersRepository, student);
 
@@ -82,7 +86,7 @@ public class StudentGradeCalculatorTest {
     }
 
     @Test
-    void shouldReturnMinus2IfAllExamGradesWeightIsBelow100() {
+    void shouldThrowAnExceptionIfAllExamGradesWeightIsBelow100() {
         StudentGradeCalculator studentGradeCalculator =
             new StudentGradeCalculator(2019, teachersRepository, student);
 
@@ -91,11 +95,13 @@ public class StudentGradeCalculatorTest {
         final List<ExamGrade> examGrades = getExamGradesWithWeightBelow100();
         when(student.getExamGradesWeighted()).thenReturn(examGrades);
 
-        assertEquals(-2, studentGradeCalculator.execute());
+        assertThrows(IncorrectExamGradesWeightSum.class, () -> {
+            studentGradeCalculator.execute();
+        });
     }
 
     @Test
-    void shouldReturnMinus1IfAllExamGradesWeightIsOver100() {
+    void shouldThrowAnExceptionIfAllExamGradesWeightIsOver100() throws IncorrectExamGradesWeightSum {
         StudentGradeCalculator studentGradeCalculator =
             new StudentGradeCalculator(2019, teachersRepository, student);
 
@@ -104,11 +110,13 @@ public class StudentGradeCalculatorTest {
         final List<ExamGrade> examGrades = getExamGradesWithWeightOver100();
         when(student.getExamGradesWeighted()).thenReturn(examGrades);
 
-        assertEquals(-1, studentGradeCalculator.execute());
+        assertThrows(IncorrectExamGradesWeightSum.class, () -> {
+            studentGradeCalculator.execute();
+        });
     }
 
     @Test
-    void shouldIncreaseOneExtraPointIfThereIsAnyBenevolentTeacherInTheYearToCalculateGrades() {
+    void shouldIncreaseOneExtraPointIfThereIsAnyBenevolentTeacherInTheYearToCalculateGrades() throws IncorrectExamGradesWeightSum {
         StudentGradeCalculator studentGradeCalculator =
             new StudentGradeCalculator(2020, teachersRepository, student);
 
@@ -123,7 +131,7 @@ public class StudentGradeCalculatorTest {
     }
 
     @Test
-    void shouldReturnMaximumGradeIfAddingExtraPointMakesGradeHigherThanMaximum() {
+    void shouldReturnMaximumGradeIfAddingExtraPointMakesGradeHigherThanMaximum() throws IncorrectExamGradesWeightSum {
         StudentGradeCalculator studentGradeCalculator =
             new StudentGradeCalculator(2020, teachersRepository, student);
 

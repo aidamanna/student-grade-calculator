@@ -1,4 +1,9 @@
-package tv.codely.student_grades;
+package tv.codely.student_grades.application;
+
+import tv.codely.student_grades.domain.ExamGrade;
+import tv.codely.student_grades.domain.IncorrectExamGradesWeightSum;
+import tv.codely.student_grades.domain.Student;
+import tv.codely.student_grades.infrastructure.TeachersRepository;
 
 import java.util.List;
 
@@ -14,7 +19,7 @@ public class StudentGradeCalculator {
         this.yearToCalculate = yearToCalculate;
     }
 
-    public float execute() {
+    public float execute() throws IncorrectExamGradesWeightSum {
         if (student.hasNotDoneAnyExam() || student.hasNotReachedMinimumClasses()) {
             return 0f;
         }
@@ -22,11 +27,11 @@ public class StudentGradeCalculator {
         int gradesWeightSum = gradesWeightSum(student.getExamGradesWeighted());
 
         if (gradesWeightSum > 100) {
-            return -1f;
+            throw new IncorrectExamGradesWeightSum("Exam grades weight sum is above 100");
         }
 
         if (gradesWeightSum < 100){
-            return -2f;
+            throw new IncorrectExamGradesWeightSum("Exam grades weight sum is below 100");
         }
 
         return gradeSumWithExtraPointIfApplies();

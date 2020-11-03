@@ -1,6 +1,7 @@
-package tv.codely.student_grades;
+package tv.codely.student_grades.repository;
 
 import org.junit.jupiter.api.Test;
+import tv.codely.student_grades.infrastructure.TeachersRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 

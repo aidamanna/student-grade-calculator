@@ -1,4 +1,4 @@
-package tv.codely.student_grades;
+package tv.codely.student_grades.infrastructure;
 
 public final class Pair<FirstType, SecondType> {
     final private FirstType first;

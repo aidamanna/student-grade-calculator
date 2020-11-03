@@ -1,7 +1,11 @@
-package tv.codely.student_grades;
+package tv.codely.student_grades.domain;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tv.codely.student_grades.domain.ExamGrade;
+import tv.codely.student_grades.domain.Grade;
+import tv.codely.student_grades.domain.Student;
+import tv.codely.student_grades.domain.Weight;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
