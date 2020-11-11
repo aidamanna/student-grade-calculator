@@ -30,7 +30,15 @@ public class Student {
         return classesAttended.get() < MINIMUM_CLASSES_TO_ATTEND;
     }
 
-    public List<Exam> getExams() {
-        return exams;
+    public int examsWeightSum() {
+        return exams.stream()
+            .map(exam -> exam.getWeight())
+            .reduce(0, Integer::sum);
+    }
+
+    public float examGradesSum() {
+        return exams.stream()
+            .map(exam -> (exam.getWeight() * exam.getGrade() / 100))
+            .reduce(0f, Float::sum);
     }
 }

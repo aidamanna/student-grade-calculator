@@ -1,10 +1,10 @@
 package tv.codely.student_grades.domain;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class StudentTest {
 
@@ -15,29 +15,56 @@ class StudentTest {
         student = new Student();
     }
 
-    @Test
-    void shouldReturnTrueIfItHasNotDoneAnyExam() {
-        assertTrue(student.hasNotDoneAnyExam());
+    @Nested
+    class HasNotDoneAnyExam {
+        @Test
+        void shouldReturnTrueIfItHasNotDoneAnyExam() {
+            assertTrue(student.hasNotDoneAnyExam());
+        }
+
+        @Test
+        void shouldReturnFalseIfItHasDoneAnyExam() {
+            final Exam exam = new Exam(new Weight(100), new Grade(5f));
+            student.addExam(exam);
+
+            assertFalse(student.hasNotDoneAnyExam());
+        }
+    }
+
+    @Nested
+    class HasNotReachedMinimumClasses {
+        @Test
+        void shouldReturnTrueIfItHasNotReachedMinimumClasses() {
+            assertTrue(student.hasNotReachedMinimumClasses());
+        }
+
+        @Test
+        void shouldReturnFalseIfItHasReachedMinimumClasses() {
+            student.attendedClass();
+
+            assertFalse(student.hasNotReachedMinimumClasses());
+        }
     }
 
     @Test
-    void shouldReturnFalseIfItHasDoneAnyExam() {
-        final Exam exam =
-            new Exam(new Weight(100), new Grade(5f));
-        student.addExam(exam);
+    void shouldReturnExamsWeightSum() {
+        final Exam anExam = new Exam(new Weight(40), new Grade(8f));
+        final Exam anotherExam = new Exam(new Weight(60), new Grade(5f));
+        student.addExam(anExam);
+        student.addExam(anotherExam);
 
-        assertFalse(student.hasNotDoneAnyExam());
+        assertEquals(100, student.examsWeightSum());
     }
 
     @Test
-    void shouldReturnTrueIfItHasNotReachedMinimumClasses() {
-        assertTrue(student.hasNotReachedMinimumClasses());
+    void shouldReturnExamGradesSum() {
+        final Exam anExam = new Exam(new Weight(40), new Grade(8f));
+        final Exam anotherExam = new Exam(new Weight(60), new Grade(5f));
+        student.addExam(anExam);
+        student.addExam(anotherExam);
+
+        assertEquals(6.2f, student.examGradesSum());
     }
 
-    @Test
-    void shouldReturnFalseIfItHasReachedMinimumClasses() {
-        student.attendedClass();
-
-        assertFalse(student.hasNotReachedMinimumClasses());
-    }
+    //round when odd exam grades
 }
